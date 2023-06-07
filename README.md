@@ -15,7 +15,7 @@
 - git submodule add https://github.com/google/googletest third-party/gtest                                               
 - cd third-party/gtest && git checkout release-1.8.1 && cd ../..                                                              
 
-![2](https://github.com/Vlad1kavkaz/lab-05/assets/112761204/3585db9b-ac3d-4ca6-b625-a3fb9252e737)
+![2](https://github.com/sippyuy/timp5/blob/master/screens/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2023-06-07_14-19-18.png)
 
 ```
 $ git add third-party
