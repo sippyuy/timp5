@@ -11,9 +11,9 @@
 Клонируем репозиторий 5 лабы для работы с библиотекой banking
 
 Подключаем библиотеку gtest:
-mkdir third-party
-git submodule add https://github.com/google/googletest third-party/gtest
-cd third-party/gtest && git checkout release-1.8.1 && cd ../..
+mkdir third-party                                         
+git submodule add https://github.com/google/googletest third-party/gtest                          
+cd third-party/gtest && git checkout release-1.8.1 && cd ../..                                    
 
 ![2](https://github.com/Vlad1kavkaz/lab-05/assets/112761204/3585db9b-ac3d-4ca6-b625-a3fb9252e737)
 
