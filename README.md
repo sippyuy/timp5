@@ -30,9 +30,9 @@
 - cat >> CMakeLists.txt << EOF
 - nano CMakeLists.txt 
 
-![3](https://github.com/Vlad1kavkaz/lab-05/assets/112761204/a5a32390-0046-4873-8544-13549dd34470)
-
 Содержимое файла CMakeLists.txt:
+
+![](https://github.com/sippyuy/timp5/blob/master/screens/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2023-06-07_14-29-53.png)
 ```
 project(banking_lib)
 
@@ -50,19 +50,19 @@ endif(NOT TARGET libbanking)
 
 include_directories()
 ```
-```
-$ git add CMakeLists.txt 
-$ git commit -m "CMake - 1 - 1"
-$ git push origin master
-```
 
-Creat other CMakeLists.txt for `tests`:
-```
-$ cat >> CMakeLists.txt << EOF
->EOF
-$ nano CMakeLists.txt 
-```
+- git add CMakeLists.txt 
+- git commit -m "CMake - 1 - 1"
+- git push origin master
+
+Создадим другой CMake для tests:
+
+- cat >> CMakeLists.txt << EOF
+- nano CMakeLists.txt 
+
 Содержимое файла CMakeLists.txt:
+
+![](https://github.com/sippyuy/timp5/blob/master/screens/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2023-06-07_14-32-34.png)
 ```
 cmake_minimum_required(VERSION 3.4)
 
@@ -86,24 +86,23 @@ if(BUILD_TESTS)
 endif()
 ```
 
-```
-$ git add CMakeLists.txt 
-$ git commit -m "CMake - 1"
-$ git push origin master
-```
+- git add CMakeLists.txt 
+- git commit -m "CMake - 1"
+- git push origin master
 
 # Task 2
 Создайте модульные тесты на классы `Transaction` и `Account`
 - Используйте mock-объекты
 - Покрытие кода должно составлять 100%
 
-Make the `tests.cpp`:
-```
-$ cat >> tests.cpp << EOF
->EOF
-$ nano tests.cpp
-```
+Создадим `tests.cpp`:
+
+- cat >> tests.cpp << EOF
+- nano tests.cpp
+- 
 Содержимое файла tests.cpp:
+
+![](https://github.com/sippyuy/timp5/blob/master/screens/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2023-06-07_14-34-46.png)
 ```
 #include "Account.h"
 #include "Transaction.h"
@@ -178,28 +177,27 @@ TEST(Transaction, SimpleTest) {
     EXPECT_FALSE(tr.Make(ac2, ac1, 300));
 }
 ```
-```
-$ git add tests.cpp
-$ git commit -m "Tests - 1"
-$ git push origin master
-```
+
+- git add tests.cpp
+- git commit -m "Tests - 1"
+- git push origin master
 
 # Task 3 
 Настройте сборочную процедуру на TravisCI
 
-Make `.yml` file:
-```
-$ mkdir .github
-$ cd ~/lab-05/.github
-$ mkdir workflows
-$ cd ~/lab-05/.github/workflows
-```
-```
-$ cat >> Action.yml << EOF
->EOF
-$ nano Action.yml
-```
+Создадим yml файл:
+
+- mkdir .github
+- cd ~/lab-05/.github
+- mkdir workflows
+- cd ~/lab-05/.github/workflows
+- cat >> Action.yml << EOF
+- nano Action.yml
+
 Содержимое файла Action.yml:
+
+![](https://github.com/sippyuy/timp5/blob/master/screens/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2023-06-07_14-35-38.png)
+
 ```
 name: CMake
 
@@ -234,20 +232,20 @@ jobs:
       build/check
       cmake --build ${{github.workspace}}/build --target test -- ARGS=--verbose
 ```
-```
-$ git add Action.ymk
-$ git commit -m "Action - 1"
-$ git push origin master
-```
+
+- git add Action.ymk
+- git commit -m "Action - 1"
+- git push origin master
 
 # Task 4
 Настройте Coveralls.io
 
-Changed CMakeLists.txt , which is responsible for the operation of the tests:
-```
-$ nano CMakeLists.txt 
-```
+- nano CMakeLists.txt 
+
 Новое содержимое файла CMakeLists.txt:
+
+![](https://github.com/sippyuy/timp5/blob/master/screens/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2023-06-07_14-37-14.png)
+
 ```
 cmake_minimum_required(VERSION 3.4)
 
@@ -283,18 +281,20 @@ if (COVERAGE)
 	target_link_libraries(check --coverage)
 endif()
 ```
-```
-$ git add CMakeLists.txt 
-$ git commit -m "CMake - 2"
-$ git push origin master
-```
 
-Let's change the scenario:
-```
-$ cd ~/lab-05/.github/workflows
-$ nano Action.yml
-```
+- git add CMakeLists.txt 
+- git commit -m "CMake - 2"
+- git push origin master
+
+Поменяем файл сценария:
+
+- cd ~/lab-05/.github/workflows
+- nano Action.yml
+
 Новое содержимое файла Action.ymk:
+
+![](https://github.com/sippyuy/timp5/blob/master/screens/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2023-06-07_14-39-36.png)
+
 ```
 name: CMake
 
@@ -337,23 +337,9 @@ jobs:
     with:
       github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
-```
-$ git add Action.ymk
-$ git commit -m "Action - 2"
-$ git push origin master
-```
 
-Registering on the website https://coveralls.io
+- git add Action.ymk
+- git commit -m "Action - 2"
+- git push origin master
 
-```
-$ nano README.md 
-```
-
-
-
-```
-$ git add README.md
-$ git commit -m "README - 2"
-$ git push origin master
-```
-
+Регистрируемся на сайте https://coveralls.io
