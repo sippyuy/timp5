@@ -1,160 +1,362 @@
-## Laboratory work V
+# lab-05
 
-Данная лабораторная работа посвещена изучению фреймворков для тестирования на примере **GTest**
+[![Coverage Status](https://coveralls.io/repos/github/ledibonibell/lab-05-1/badge.svg?branch=master)](https://coveralls.io/github/ledibonibell/lab-05-1?branch=master)
 
-```sh
-$ open https://github.com/google/googletest
+# Report-05
+Данная лабораторная работа посвещена изучению фреймворков для тестирования на примере GTest
+![1](https://github.com/Vlad1kavkaz/lab-05/assets/112761204/f7b17502-87df-496d-b562-8447a4edaee3)
+
+# Task 1
+Создайте `CMakeList.txt` для библиотеки banking
+
+We believe that we have already downloaded banking
+
+Connect the gtest library:
 ```
-
-## Tasks
-
-- [ ] 1. Создать публичный репозиторий с названием **lab05** на сервисе **GitHub**
-- [ ] 2. Выполнить инструкцию учебного материала
-- [ ] 3. Ознакомиться со ссылками учебного материала
-- [ ] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
-
-## Tutorial
-
-```sh
-$ export GITHUB_USERNAME=<имя_пользователя>
-$ alias gsed=sed # for *-nix system
-```
-
-```sh
-$ cd ${GITHUB_USERNAME}/workspace
-$ pushd .
-$ source scripts/activate
-```
-
-```sh
-$ git clone https://github.com/${GITHUB_USERNAME}/lab04 projects/lab05
-$ cd projects/lab05
-$ git remote remove origin
-$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab05
-```
-
-```sh
 $ mkdir third-party
 $ git submodule add https://github.com/google/googletest third-party/gtest
 $ cd third-party/gtest && git checkout release-1.8.1 && cd ../..
-$ git add third-party/gtest
-$ git commit -m"added gtest framework"
+```
+![2](https://github.com/Vlad1kavkaz/lab-05/assets/112761204/3585db9b-ac3d-4ca6-b625-a3fb9252e737)
+
+```
+$ git add third-party
+$ git commit -m "added gtest framework"
+$ git push origin master
 ```
 
-```sh
-$ gsed -i '/option(BUILD_EXAMPLES "Build examples" OFF)/a\
-option(BUILD_TESTS "Build tests" OFF)
-' CMakeLists.txt
-$ cat >> CMakeLists.txt <<EOF
+
+Creat the CMakeLists.txt for banking:
+```
+$ cd banking
+$ cat >> CMakeLists.txt << EOF
+>EOF
+$ nano CMakeLists.txt 
+```
+![3](https://github.com/Vlad1kavkaz/lab-05/assets/112761204/a5a32390-0046-4873-8544-13549dd34470)
+
+Содержимое файла CMakeLists.txt:
+```
+project(banking_lib)
+
+if (NOT TARGET libbanking)
+    add_library(libbanking STATIC
+        /Account.cpp
+        /Transaction.cpp
+    )
+
+    install(TARGETS libbanking
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+    )
+endif(NOT TARGET libbanking)
+
+include_directories()
+```
+```
+$ git add CMakeLists.txt 
+$ git commit -m "CMake - 1 - 1"
+$ git push origin master
+```
+
+Creat other CMakeLists.txt for `tests`:
+```
+$ cat >> CMakeLists.txt << EOF
+>EOF
+$ nano CMakeLists.txt 
+```
+Содержимое файла CMakeLists.txt:
+```
+cmake_minimum_required(VERSION 3.4)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+option(BUILD_TEST "Build tests" OFF)
+
+project(banking)
+
+add_library(banking STATIC banking/Account.cpp banking/Transaction.cpp)
+target_include_directories(banking PUBLIC banking/)
 
 if(BUILD_TESTS)
   enable_testing()
   add_subdirectory(third-party/gtest)
-  file(GLOB \${PROJECT_NAME}_TEST_SOURCES tests/*.cpp)
-  add_executable(check \${\${PROJECT_NAME}_TEST_SOURCES})
-  target_link_libraries(check \${PROJECT_NAME} gtest_main)
+  file(GLOB BANKING_TEST_SOURCES tests/tests.cpp)
+  add_executable(check tests/tests.cpp)
+  target_link_libraries(check banking gtest_main gmock_main)
   add_test(NAME check COMMAND check)
 endif()
-EOF
 ```
 
-```sh
-$ mkdir tests
-$ cat > tests/test1.cpp <<EOF
-#include <print.hpp>
-
-#include <gtest/gtest.h>
-
-TEST(Print, InFileStream)
-{
-  std::string filepath = "file.txt";
-  std::string text = "hello";
-  std::ofstream out{filepath};
-
-  print(text, out);
-  out.close();
-
-  std::string result;
-  std::ifstream in{filepath};
-  in >> result;
-
-  EXPECT_EQ(result, text);
-}
-EOF
 ```
-
-```sh
-$ cmake -H. -B_build -DBUILD_TESTS=ON
-$ cmake --build _build
-$ cmake --build _build --target test
-```
-
-```sh
-$ _build/check
-$ cmake --build _build --target test -- ARGS=--verbose
-```
-
-```sh
-$ gsed -i 's/lab04/lab05/g' README.md
-$ gsed -i 's/\(DCMAKE_INSTALL_PREFIX=_install\)/\1 -DBUILD_TESTS=ON/' .travis.yml
-$ gsed -i '/cmake --build _build --target install/a\
-- cmake --build _build --target test -- ARGS=--verbose
-' .travis.yml
-```
-
-```sh
-$ travis lint
-```
-
-```sh
-$ git add .travis.yml
-$ git add tests
-$ git add -p
-$ git commit -m"added tests"
+$ git add CMakeLists.txt 
+$ git commit -m "CMake - 1"
 $ git push origin master
 ```
 
-```sh
-$ travis login --auto
-$ travis enable
+# Task 2
+Создайте модульные тесты на классы `Transaction` и `Account`
+- Используйте mock-объекты
+- Покрытие кода должно составлять 100%
+
+Make the `tests.cpp`:
+```
+$ cat >> tests.cpp << EOF
+>EOF
+$ nano tests.cpp
+```
+Содержимое файла tests.cpp:
+```
+#include "Account.h"
+#include "Transaction.h"
+
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+
+class AccountMock : public Account {
+public:
+    AccountMock(int id, int balance) : Account(id, balance) {}
+    MOCK_CONST_METHOD0(GetBalance, int());
+    MOCK_METHOD1(ChangeBalance, void(int diff));
+    MOCK_METHOD0(Lock, void());
+    MOCK_METHOD0(Unlock, void());
+};
+class TransactionMock : public Transaction {
+public:
+    MOCK_METHOD3(Make, bool(Account& from, Account& to, int sum));
+};
+
+TEST(Account, Mock) {
+    AccountMock acc(1, 100);
+    EXPECT_CALL(acc, GetBalance()).Times(1);
+    EXPECT_CALL(acc, ChangeBalance(testing::_)).Times(2);
+    EXPECT_CALL(acc, Lock()).Times(2);
+    EXPECT_CALL(acc, Unlock()).Times(1);
+    acc.GetBalance();
+    acc.ChangeBalance(100); // throw
+    acc.Lock();
+    acc.ChangeBalance(100);
+    acc.Lock(); // throw
+    acc.Unlock();
+}
+
+TEST(Account, SimpleTest) {
+    Account acc(1, 100);
+    EXPECT_EQ(acc.id(), 1);
+    EXPECT_EQ(acc.GetBalance(), 100);
+    EXPECT_THROW(acc.ChangeBalance(100), std::runtime_error);
+    EXPECT_NO_THROW(acc.Lock());
+    acc.ChangeBalance(100);
+    EXPECT_EQ(acc.GetBalance(), 200);
+    EXPECT_THROW(acc.Lock(), std::runtime_error);
+}
+
+TEST(Transaction, Mock) {
+    TransactionMock tr;
+    Account ac1(1, 50);
+    Account ac2(2, 500);
+    EXPECT_CALL(tr, Make(testing::_, testing::_, testing::_))
+    .Times(6);
+    tr.set_fee(100);
+    tr.Make(ac1, ac2, 199);
+    tr.Make(ac2, ac1, 500);
+    tr.Make(ac2, ac1, 300);
+    tr.Make(ac1, ac1, 0); // throw
+    tr.Make(ac1, ac2, -1); // throw
+    tr.Make(ac1, ac2, 99); // throw
+}
+
+TEST(Transaction, SimpleTest) {
+    Transaction tr;
+    Account ac1(1, 50);
+    Account ac2(2, 500);
+    tr.set_fee(100);
+    EXPECT_EQ(tr.fee(), 100);
+    EXPECT_THROW(tr.Make(ac1, ac1, 0), std::logic_error);
+    EXPECT_THROW(tr.Make(ac1, ac2, -1), std::invalid_argument);
+    EXPECT_THROW(tr.Make(ac1, ac2, 99), std::logic_error);
+    EXPECT_FALSE(tr.Make(ac1, ac2, 199));
+    EXPECT_FALSE(tr.Make(ac2, ac1, 500));
+    EXPECT_FALSE(tr.Make(ac2, ac1, 300));
+}
+```
+```
+$ git add tests.cpp
+$ git commit -m "Tests - 1"
+$ git push origin master
 ```
 
-```sh
-$ mkdir artifacts
-$ sleep 20s && gnome-screenshot --file artifacts/screenshot.png
-# for macOS: $ screencapture -T 20 artifacts/screenshot.png
-# open https://github.com/${GITHUB_USERNAME}/lab05
+# Task 3 
+Настройте сборочную процедуру на TravisCI
+
+Make `.yml` file:
+```
+$ mkdir .github
+$ cd ~/lab-05/.github
+$ mkdir workflows
+$ cd ~/lab-05/.github/workflows
+```
+```
+$ cat >> Action.yml << EOF
+>EOF
+$ nano Action.yml
+```
+Содержимое файла Action.yml:
+```
+name: CMake
+
+on:
+ push:
+  branches: [master]
+ pull_request:
+  branches: [master]
+
+jobs:
+ build_Linux:
+
+  runs-on: ubuntu-latest
+
+  steps:
+  - uses: actions/checkout@v3
+
+  - name: Adding gtest
+    run: git clone https://github.com/google/googletest.git third-party/gtest -b release-1.11.0
+
+  - name: Install lcov
+    run: sudo apt-get install -y lcov
+
+  - name: Config banking with tests
+    run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
+
+  - name: Build banking
+    run: cmake --build ${{github.workspace}}/build
+
+  - name: Run tests
+    run: |
+      build/check
+      cmake --build ${{github.workspace}}/build --target test -- ARGS=--verbose
+```
+```
+$ git add Action.ymk
+$ git commit -m "Action - 1"
+$ git push origin master
 ```
 
-## Report
+# Task 4
+Настройте Coveralls.io
 
-```sh
-$ popd
-$ export LAB_NUMBER=05
-$ git clone https://github.com/tp-labs/lab${LAB_NUMBER} tasks/lab${LAB_NUMBER}
-$ mkdir reports/lab${LAB_NUMBER}
-$ cp tasks/lab${LAB_NUMBER}/README.md reports/lab${LAB_NUMBER}/REPORT.md
-$ cd reports/lab${LAB_NUMBER}
-$ edit REPORT.md
-$ gist REPORT.md
+Changed CMakeLists.txt , which is responsible for the operation of the tests:
+```
+$ nano CMakeLists.txt 
+```
+Новое содержимое файла CMakeLists.txt:
+```
+cmake_minimum_required(VERSION 3.4)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+option(BUILD_TEST "Build tests" OFF)
+
+if(BUILD_TESTS)
+  add_compile_options(--coverage)
+endif()
+
+option(COVERAGE "Check coverage" ON)
+
+project(banking)
+
+add_library(banking STATIC banking/Account.cpp banking/Transaction.cpp)
+target_include_directories(banking PUBLIC banking/)
+
+target_link_libraries(banking gcov)
+
+if(BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(third-party/gtest)
+  file(GLOB BANKING_TEST_SOURCES tests/tests.cpp)
+  add_executable(check tests/tests.cpp)
+  target_link_libraries(check banking gtest_main gmock_main)
+  add_test(NAME check COMMAND check)
+endif()
+
+if (COVERAGE)
+	target_compile_options(check PRIVATE --coverage)
+	target_link_libraries(check --coverage)
+endif()
+```
+```
+$ git add CMakeLists.txt 
+$ git commit -m "CMake - 2"
+$ git push origin master
 ```
 
-## Homework
+Let's change the scenario:
+```
+$ cd ~/lab-05/.github/workflows
+$ nano Action.yml
+```
+Новое содержимое файла Action.ymk:
+```
+name: CMake
 
-### Задание
-1. Создайте `CMakeList.txt` для библиотеки *banking*.
-2. Создайте модульные тесты на классы `Transaction` и `Account`.
-    * Используйте mock-объекты.
-    * Покрытие кода должно составлять 100%.
-3. Настройте сборочную процедуру на **TravisCI**.
-4. Настройте [Coveralls.io](https://coveralls.io/).
+on:
+ push:
+  branches: [master]
+ pull_request:
+  branches: [master]
 
-## Links
+jobs:
+ build_Linux:
 
-- [C++ CI: Travis, CMake, GTest, Coveralls & Appveyor](http://david-grs.github.io/cpp-clang-travis-cmake-gtest-coveralls-appveyor/)
-- [Boost.Tests](http://www.boost.org/doc/libs/1_63_0/libs/test/doc/html/)
-- [Catch](https://github.com/catchorg/Catch2)
+  runs-on: ubuntu-latest
+
+  steps:
+  - uses: actions/checkout@v3
+
+  - name: Adding gtest
+    run: git clone https://github.com/google/googletest.git third-party/gtest -b release-1.11.0
+
+  - name: Install lcov
+    run: sudo apt-get install -y lcov
+
+  - name: Config banking with tests
+    run: cmake -H. -B ${{github.workspace}}/build -DBUILD_TESTS=ON
+
+  - name: Build banking
+    run: cmake --build ${{github.workspace}}/build
+
+  - name: Run tests
+    run: |
+      build/check
+      cmake --build ${{github.workspace}}/build --target test -- ARGS=--verbose
+
+  - name: Do lcov stuff
+    run: lcov -c -d build/CMakeFiles/banking.dir/banking/ --include *.cpp --output-file ./coverage/lcov.info
+
+  - name: Publish to coveralls.io
+    uses: coverallsapp/github-action@v1.1.2
+    with:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+```
+```
+$ git add Action.ymk
+$ git commit -m "Action - 2"
+$ git push origin master
+```
+
+Registering on the website https://coveralls.io
 
 ```
-Copyright (c) 2015-2021 The ISC Authors
+$ nano README.md 
 ```
+
+
+
+```
+$ git add README.md
+$ git commit -m "README - 2"
+$ git push origin master
+```
+
