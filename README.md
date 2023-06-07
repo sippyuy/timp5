@@ -24,13 +24,12 @@
 
 ![](https://github.com/sippyuy/timp5/blob/master/screens/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_2023-06-07_14-23-51.png)
 
-Creat the CMakeLists.txt for banking:
-```
-$ cd banking
-$ cat >> CMakeLists.txt << EOF
->EOF
-$ nano CMakeLists.txt 
-```
+Создадим файл CMake для banking:
+
+- cd banking
+- cat >> CMakeLists.txt << EOF
+- nano CMakeLists.txt 
+
 ![3](https://github.com/Vlad1kavkaz/lab-05/assets/112761204/a5a32390-0046-4873-8544-13549dd34470)
 
 Содержимое файла CMakeLists.txt:
