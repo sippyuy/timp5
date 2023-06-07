@@ -8,9 +8,9 @@
 # Task 1
 Создайте `CMakeList.txt` для библиотеки banking
 
-We believe that we have already downloaded banking
+Клонируем репозиторий 5 лабы для работы с библиотекой banking
 
-Connect the gtest library:
+Подключаем библиотеку gtest:
 ```
 $ mkdir third-party
 $ git submodule add https://github.com/google/googletest third-party/gtest
