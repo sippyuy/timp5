@@ -4,7 +4,6 @@
 
 # Report-05
 Данная лабораторная работа посвещена изучению фреймворков для тестирования на примере GTest
-![1](https://github.com/Vlad1kavkaz/lab-05/assets/112761204/f7b17502-87df-496d-b562-8447a4edaee3)
 
 # Task 1
 Создайте `CMakeList.txt` для библиотеки banking
